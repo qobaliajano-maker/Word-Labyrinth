@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ka">
 <head>
@@ -6,96 +5,121 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ZUGDIDI HUB</title>
     <style>
-        :root { --main: #5d5fef; --bg: #f4f7ff; }
-        body { margin: 0; background: var(--bg); font-family: sans-serif; overflow-x: hidden; }
+        :root { --main: #5d5fef; --gold: #ffb800; --bg: #f4f7ff; }
+        * { box-sizing: border-box; font-family: sans-serif; }
+        body { margin: 0; background: var(--bg); }
 
-        /* შენი პირადი რეკლამის სტილი (სრული ეკრანი) */
-        #main-ad-screen {
+        /* რეკლამის სტილი */
+        #ad-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, #1e1e2c, #3a3a5e);
-            z-index: 99999;
+            z-index: 100000;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             color: white;
-            padding: 20px;
-            box-sizing: border-box;
             text-align: center;
+            transition: opacity 0.5s ease;
         }
-
-        .ad-box {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            width: 100%;
-            max-width: 350px;
-        }
-
-        .ad-title { font-size: 24px; font-weight: bold; margin-bottom: 15px; color: #ffb800; }
-        .ad-desc { font-size: 16px; margin-bottom: 25px; opacity: 0.9; }
-
-        .close-btn {
+        .ad-box { padding: 30px; width: 90%; max-width: 400px; }
+        .skip-btn {
             margin-top: 20px;
-            background: white;
-            color: #1e1e2c;
-            padding: 12px 30px;
-            border-radius: 15px;
+            background: var(--gold);
+            color: black;
+            padding: 12px 25px;
+            border-radius: 12px;
             font-weight: bold;
-            text-decoration: none;
+            display: inline-block;
             cursor: pointer;
-            transition: 0.3s;
         }
 
-        .close-btn:hover { transform: scale(1.05); }
-
-        /* ძირითადი საიტის კონტენტი */
-        .content { padding: 20px; text-align: center; }
-        header { padding: 20px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        /* საიტის ძირითადი სტილი */
+        header { background: white; padding: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .logo { font-size: 24px; font-weight: 900; color: var(--main); }
+        .container { padding: 15px; }
+        
+        .banner { 
+            background: #1e1e2c; border-radius: 20px; padding: 20px; 
+            color: white; margin-bottom: 20px; text-align: center;
+        }
+        
+        .card { 
+            background: white; border-radius: 20px; padding: 15px; 
+            display: flex; align-items: center; gap: 15px; 
+            margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        }
+        .biz-icon { width: 60px; height: 60px; border-radius: 15px; background: #f0f2f8; display: flex; align-items: center; justify-content: center; font-size: 30px; }
+        
+        .wa-float { 
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: #25D366; color: white; padding: 15px; border-radius: 30px; 
+            text-decoration: none; width: 85%; text-align: center; font-weight: bold;
+            box-shadow: 0 10px 25px rgba(37,211,102,0.3);
+        }
     </style>
 </head>
 <body>
 
-<div id="main-ad-screen">
+<div id="ad-screen">
     <div class="ad-box">
-        <div class="ad-title">ZUGDIDI HUB 🚀</div>
-        <div class="ad-desc">
-            მოგესალმებით ქალაქის მთავარ პლატფორმაზე!<br><br>
-            გინდათ თქვენი ბიზნესი აქ ჩანდეს? <br>
-            <b>დაგვიკავშირდით დღესვე!</b>
-        </div>
-        <div class="close-btn" onclick="hideAd()">გახსენი აპლიკაცია</div>
+        <h1 style="color:var(--gold);">ZUGDIDI HUB</h1>
+        <p>საუკეთესო ბიზნესები ერთ სივრცეში</p>
+        <div id="skip-timer" class="skip-btn">მოიცადეთ 3 წამი...</div>
     </div>
 </div>
 
-<div id="app-content">
-    <header>
-        <h2 style="color:var(--main); margin:0;">ZUGDIDI HUB</h2>
-    </header>
-    <div class="content">
-        <h3>კეთილი იყოს შენი მობრძანება!</h3>
-        <p>აქ ნახავ ქალაქის საუკეთესო სერვისებს.</p>
+<header><div class="logo">ZUGDIDI HUB</div></header>
+
+<div class="container">
+    <div class="banner">
+        <h2 style="margin:0; color:var(--gold);">TOP რეკლამა 🚀</h2>
+        <p style="font-size:12px;">გახადე შენი ბიზნესი პოპულარული</p>
+    </div>
+
+    <div class="card">
+        <div class="biz-icon">🍴</div>
+        <div>
+            <b>რესტორანი "დიარონი"</b><br>
+            <small>📍 თბილისის ქუჩა</small><br>
+            <a href="tel:558484604" style="color:var(--main); text-decoration:none; font-weight:bold;">📞 დარეკვა</a>
         </div>
+    </div>
+
+    <div class="card">
+        <div class="biz-icon">☕</div>
+        <div>
+            <b>კაფე "მენძელი"</b><br>
+            <small>📍 გამსახურდიას გამზირი</small><br>
+            <a href="tel:558484604" style="color:var(--main); text-decoration:none; font-weight:bold;">📞 დარეკვა</a>
+        </div>
+    </div>
 </div>
 
+<a href="https://wa.me/995558484604" class="wa-float">➕ ბიზნესის დამატება</a>
+
 <script>
-    function hideAd() {
-        // რეკლამა ქრება ეფექტურად
-        const ad = document.getElementById('main-ad-screen');
-        ad.style.opacity = '0';
-        ad.style.transition = '0.5s';
-        setTimeout(() => {
-            ad.style.display = 'none';
-        }, 500);
-    }
+    let seconds = 3;
+    const timerText = document.getElementById('skip-timer');
+    const adScreen = document.getElementById('ad-screen');
+
+    const countdown = setInterval(() => {
+        seconds--;
+        if (seconds > 0) {
+            timerText.innerText = `მოიცადეთ ${seconds} წამი...`;
+        } else {
+            clearInterval(countdown);
+            timerText.innerText = "გახსენი აპლიკაცია ➔";
+            timerText.onclick = () => {
+                adScreen.style.opacity = '0';
+                setTimeout(() => adScreen.style.display = 'none', 500);
+            };
+        }
+    }, 1000);
 </script>
 
 </body>
 </html>
-
 
 
 
