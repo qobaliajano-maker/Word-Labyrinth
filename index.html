@@ -2,47 +2,105 @@
 <html lang="ka">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ზუგდიდის ბიზნეს ჰაბი</title>
     <style>
-        :root { --main: #5d5fef; --bg: #f4f7ff; }
-        body { margin: 0; background: var(--bg); font-family: sans-serif; padding-bottom: 80px; }
-        header { background: white; padding: 25px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-radius: 0 0 30px 30px; }
-        .banner { margin: 20px; padding: 25px; background: linear-gradient(135deg, #5d5fef, #8e90ff); color: white; border-radius: 25px; text-align: center; box-shadow: 0 10px 20px rgba(93,95,239,0.2); }
-        .card { background: white; margin: 15px; padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 15px; border: 1px solid #eee; }
-        .biz-img { width: 70px; height: 70px; border-radius: 15px; background: #eee; }
-        .wa-btn { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #25D366; color: white; padding: 18px; border-radius: 40px; text-decoration: none; width: 85%; text-align: center; font-weight: bold; box-shadow: 0 10px 20px rgba(37,211,102,0.3); z-index: 1000; }
+        :root { --main: #5d5fef; --dark: #1e1e2c; --gold: #ffb800; --bg: #f4f7ff; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; background: var(--bg); color: var(--dark); padding-bottom: 90px; }
+
+        header { background: white; padding: 20px; border-radius: 0 0 30px 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); text-align: center; }
+        .logo { font-size: 24px; font-weight: 900; color: var(--main); }
+
+        /* VIP რეკლამა */
+        .banner { 
+            margin: 15px; padding: 20px; 
+            background: linear-gradient(135deg, #5d5fef, #8e90ff); 
+            border-radius: 20px; color: white; box-shadow: 0 10px 20px rgba(93,95,239,0.2);
+        }
+        .banner h2 { margin: 0; font-size: 18px; }
+        .banner p { font-size: 12px; margin: 10px 0; opacity: 0.9; }
+
+        /* კატეგორიები */
+        .cats { display: flex; gap: 10px; overflow-x: auto; padding: 10px 15px; scrollbar-width: none; }
+        .cat { background: white; padding: 8px 15px; border-radius: 12px; font-size: 12px; font-weight: bold; white-space: nowrap; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+
+        /* ბიზნეს ბარათები */
+        .list { padding: 15px; }
+        .card { 
+            background: white; border-radius: 20px; padding: 12px; margin-bottom: 15px; 
+            display: flex; align-items: center; gap: 12px; position: relative; border: 1px solid #eee;
+        }
+        .biz-img { width: 80px; height: 80px; border-radius: 15px; object-fit: cover; }
+        .biz-text b { font-size: 15px; display: block; margin-bottom: 3px; }
+        .biz-text span { font-size: 11px; color: #777; display: block; }
+        .call-btn { 
+            display: inline-block; margin-top: 8px; color: var(--main); 
+            font-weight: bold; text-decoration: none; font-size: 12px; 
+        }
+        .vip-tag { position: absolute; top: 10px; right: 10px; background: var(--gold); color: white; font-size: 8px; padding: 3px 7px; border-radius: 5px; font-weight: bold; }
+
+        /* მთავარი ღილაკი */
+        .wa-float { 
+            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+            background: #25D366; color: white; padding: 15px; border-radius: 30px; 
+            text-decoration: none; width: 90%; text-align: center; font-weight: 800;
+            box-shadow: 0 8px 20px rgba(37,211,102,0.3); z-index: 1000;
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <h1 style="color:var(--main); margin:0; font-size: 24px;">ZUGDIDI HUB</h1>
+    <div class="logo">ZUGDIDI HUB</div>
 </header>
 
 <div class="banner">
     <h2>რეკლამა აქ! 🚀</h2>
-    <p>გახადე შენი ბიზნესი პოპულარული</p>
+    <p>გახადე შენი ბიზნესი ყველაზე პოპულარული ზუგდიდში.</p>
+    <a href="https://wa.me/995558484604?text=მინდა_რეკლამის_ყიდვა" style="color:white; font-weight:bold; font-size:12px;">შეძენა →</a>
 </div>
 
-<div class="card">
-    <div class="biz-img"></div>
-    <div>
-        <b>რესტორანი "დიარონი"</b><br>
-        <small>📍 თბილისის ქუჩა</small><br>
-        <a href="tel:558484604" style="color:var(--main); text-decoration:none; font-size:12px;">📞 დარეკვა</a>
+<div class="cats">
+    <div class="cat" style="background:var(--main); color:white;">ყველა</div>
+    <div class="cat">🍴 კვება</div>
+    <div class="cat">🛠 სერვისი</div>
+    <div class="cat">🛍 მაღაზიები</div>
+</div>
+
+<div class="list">
+    <div class="card">
+        <div class="vip-tag">VIP</div>
+        <img src="https://lh5.googleusercontent.com/p/AF1QipN2C_fA8G0vBfU5r_vA79k1C9_W3m7W3T4v1_0=w400-h300-k-no" class="biz-img">
+        <div class="biz-text">
+            <b>რესტორანი "დიარონი"</b>
+            <span>📍 თბილისის ქუჩა, ზუგდიდი</span>
+            <a href="tel:558484604" class="call-btn">📞 დარეკვა</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="https://lh5.googleusercontent.com/p/AF1QipNX9v5W7N9p_h_W-w2G-q_p-v_t-f_v-v_t-f_v=w400-h300-k-no" class="biz-img">
+        <div class="biz-text">
+            <b>კაფე "მენძელი"</b>
+            <span>📍 გამსახურდიას გამზირი</span>
+            <a href="tel:558484604" class="call-btn">📞 დარეკვა</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="https://lh5.googleusercontent.com/p/AF1QipM-Y0vY-v_v_v-v_v_v_v-v_v_v_v-v_v_v_v=w400-h300-k-no" class="biz-img">
+        <div class="biz-text">
+            <b>სტომატოლოგიური "დენტი"</b>
+            <span>📍 რუსთაველის ქუჩა</span>
+            <a href="tel:558484604" class="call-btn">📞 დარეკვა</a>
+        </div>
     </div>
 </div>
 
-<a href="https://wa.me/995558484604?text=გამარჯობა,მინდა_ბიზნესის_დამატება" class="wa-btn">
-    ➕ ბიზნესის დამატება
+<a href="https://wa.me/995558484604?text=მინდა_ბიზნესის_დამატება" class="wa-float">
+    ➕ ბიზნესის დამატება (უფასოდ)
 </a>
 
 </body>
 </html>
-
-
-
-
-
-
