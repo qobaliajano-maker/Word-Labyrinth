@@ -4,285 +4,125 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tbilisi Transport Pro</title>
-    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
     <style>
-        :root {
-            --primary: #5d5fef;
-            --secondary: #6c7ff2;
-            --bg-main: #f4f7ff;
-            --text-dark: #2d3142;
-            --text-gray: #9196b2;
-        }
+        :root { --primary: #5d5fef; --bg: #f4f7ff; --text: #2d3142; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; background: var(--bg); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        
+        /* Header */
+        .header { background: white; padding: 15px 20px; border-radius: 0 0 30px 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); z-index: 1000; }
+        .lang-btns { display: flex; gap: 8px; margin-bottom: 12px; }
+        .l-btn { border: none; background: #eee; padding: 6px 12px; border-radius: 8px; font-weight: bold; font-size: 12px; }
+        .l-btn.active { background: var(--primary); color: white; }
+        .top-info { display: flex; justify-content: space-between; align-items: center; }
+        .top-info h1 { margin: 0; font-size: 20px; color: var(--text); }
+        .status-dot { width: 10px; height: 10px; background: #10b981; border-radius: 50%; display: inline-block; margin-right: 5px; box-shadow: 0 0 8px #10b981; }
 
-        * { 
-            box-sizing: border-box; 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+        /* Map */
+        #map { flex: 1; width: 100%; z-index: 1; }
 
-        body { 
-            margin: 0; 
-            background-color: var(--bg-main); 
-            height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            overflow: hidden; 
-        }
-
-        /* ზედა თეთრი ბარათი */
-        .header-card {
-            background: white;
-            padding: 20px 25px;
-            border-bottom-left-radius: 35px;
-            border-bottom-right-radius: 35px;
-            box-shadow: 0 10px 25px rgba(93, 95, 239, 0.08);
-            z-index: 1000;
-        }
-
-        .lang-selector {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .lang-btn {
-            border: none;
-            background: #f0f2f8;
-            padding: 8px 15px;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 12px;
-            color: var(--text-gray);
-            transition: 0.3s;
-        }
-
-        .lang-btn.active {
-            background: var(--primary);
-            color: white;
-        }
-
-        .header-main {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .brand h1 {
-            margin: 0;
-            font-size: 24px;
-            color: var(--text-dark);
-            font-weight: 800;
-        }
-
-        .brand p {
-            margin: 5px 0 0;
-            font-size: 13px;
-            color: var(--text-gray);
-        }
-
-        .gps-btn {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 18px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(93, 95, 239, 0.3);
-        }
-
-        /* რუკის სექცია */
-        #map {
-            flex: 1;
-            width: 100%;
-            z-index: 1;
-        }
-
-        /* ქვედა პანელი */
-        .bottom-panel {
-            background: white;
-            height: 45%;
-            border-top-left-radius: 35px;
-            border-top-right-radius: 35px;
-            padding: 25px;
-            overflow-y: auto;
-            z-index: 1000;
-            box-shadow: 0 -10px 25px rgba(0,0,0,0.05);
-        }
-
-        .panel-title {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--text-dark);
-            margin-bottom: 20px;
-            display: block;
-        }
-
-        /* ავტობუსის ბარათი */
-        .bus-card {
-            background: #ffffff;
-            border: 1px solid #f0f2f8;
-            padding: 18px;
-            border-radius: 22px;
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            position: relative;
-            transition: transform 0.2s;
-        }
-
-        .bus-card:active {
-            transform: scale(0.98);
-        }
-
-        .bus-badge {
-            width: 52px;
-            height: 52px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 800;
-            font-size: 20px;
-            margin-right: 15px;
-        }
-
-        .bus-details b {
-            font-size: 16px;
-            color: var(--text-dark);
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .bus-details span {
-            font-size: 13px;
-            color: var(--text-gray);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .fav-icon {
-            position: absolute;
-            right: 20px;
-            color: #e0e4f2;
-            font-size: 22px;
-        }
-
-        .fav-icon.active {
-            color: #ffcc00;
-        }
-
-        /* Leaflet სტილის გასწორება */
-        .leaflet-control-zoom { display: none; }
-        .leaflet-control-attribution { display: none; }
+        /* Bottom Panel */
+        .panel { background: white; height: 45%; border-radius: 35px 35px 0 0; padding: 20px; overflow-y: auto; z-index: 1000; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
+        .p-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; display: block; }
+        
+        /* Bus Card */
+        .card { background: #fff; border: 1px solid #f0f2f8; padding: 15px; border-radius: 20px; display: flex; align-items: center; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        .b-nr { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px; margin-right: 15px; }
+        .b-info { flex: 1; }
+        .b-info b { font-size: 15px; display: block; color: var(--text); }
+        .b-info span { font-size: 13px; color: #9196b2; }
+        .star { color: #ffcc00; font-size: 20px; margin-left: 10px; }
     </style>
 </head>
-<body>
+<body onload="autoLocate()">
 
-<div class="header-card">
-    <div class="lang-selector">
-        <button class="lang-btn active" onclick="setLanguage('ka', this)">GE</button>
-        <button class="lang-btn" onclick="setLanguage('en', this)">EN</button>
-        <button class="lang-btn" onclick="setLanguage('ru', this)">RU</button>
+<div class="header">
+    <div class="lang-btns">
+        <button class="l-btn active" onclick="setL('ka', this)">GE</button>
+        <button class="l-btn" onclick="setL('en', this)">EN</button>
+        <button class="l-btn" onclick="setL('ru', this)">RU</button>
     </div>
-    <div class="header-main">
-        <div class="brand">
-            <h1 id="txt-title">თბილისის ტრანსპორტი</h1>
-            <p id="txt-subtitle">რეალურ დროში თვალყურის დევნება</p>
+    <div class="top-info">
+        <div>
+            <h1 id="t-title">თბილისის ტრანსპორტი</h1>
+            <span style="font-size:12px; color:#9196b2;"><span class="status-dot"></span> <span id="t-live">Live: რეალური დრო</span></span>
         </div>
-        <button class="gps-btn" onclick="locateUser()">
-            📍 <span id="txt-gps">ჩემი ლოკაცია</span>
-        </button>
+        <div id="loading-gps" style="font-size: 12px; color: var(--primary); font-weight: bold;">GPS...</div>
     </div>
 </div>
 
 <div id="map"></div>
 
-<div class="bottom-panel">
-    <span class="panel-title" id="txt-routes">მარშრუტები</span>
-    <div id="bus-container">
-        <p style="text-align:center; color:#adb5bd; margin-top:40px; font-size:14px;" id="txt-info">
-            გთხოვთ ჩართოთ GPS მონაცემების სანახავად
-        </p>
+<div class="panel">
+    <span class="p-title" id="t-routes">მარშრუტები</span>
+    <div id="list">
+        <p style="text-align:center; color:#ccc; padding-top:20px;" id="t-wait">ვეძებ თქვენს ლოკაციას...</p>
     </div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <script>
-    const i18n = {
-        ka: { title: "თბილისის ტრანსპორტი", sub: "რეალურ დროში თვალყურის დევნება", routes: "მარშრუტები", gps: "ჩემი ლოკაცია", info: "გთხოვთ ჩართოთ GPS მონაცემების სანახავად", min: "წთ", vehicles: "ტრანსპორტი" },
-        en: { title: "Tbilisi Transport", sub: "Real-time live tracking", routes: "Routes", gps: "Find Me", info: "Please enable GPS to see data", min: "min", vehicles: "vehicles" },
-        ru: { title: "Тбилисский Транспорт", sub: "Живое отслеживание", routes: "Маршруты", gps: "Где я?", info: "Включите GPS для данных", min: "мин", vehicles: "транспорта" }
+    const lang = {
+        ka: { title: "თბილისის ტრანსპორტი", live: "Live: რეალური დრო", routes: "მარშრუტები", wait: "ვეძებ თქვენს ლოკაციას...", min: "წთ" },
+        en: { title: "Tbilisi Transport", live: "Live: Real-time", routes: "Routes", wait: "Locating you...", min: "min" },
+        ru: { title: "Тбилисский Транспорт", live: "Live: В реальном времени", routes: "Маршруты", wait: "Поиск локации...", min: "мин" }
     };
 
-    let currentLang = 'ka';
-    let map = L.map('map', { zoomControl: false, tap: true }).setView([41.7151, 44.7870], 13);
-    
+    let cur = 'ka';
+    let map = L.map('map', { zoomControl: false }).setView([41.7151, 44.7870], 13);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
 
-    function setLanguage(lang, btn) {
-        currentLang = lang;
-        document.getElementById('txt-title').innerText = i18n[lang].title;
-        document.getElementById('txt-subtitle').innerText = i18n[lang].sub;
-        document.getElementById('txt-routes').innerText = i18n[lang].routes;
-        document.getElementById('txt-gps').innerText = i18n[lang].gps;
-        document.getElementById('txt-info').innerText = i18n[lang].info;
-
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    function setL(l, btn) {
+        cur = l;
+        document.getElementById('t-title').innerText = lang[l].title;
+        document.getElementById('t-live').innerText = lang[l].live;
+        document.getElementById('t-routes').innerText = lang[l].routes;
+        document.getElementById('t-wait').innerText = lang[l].wait;
+        document.querySelectorAll('.l-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        
-        if (document.querySelectorAll('.bus-card').length > 0) renderBuses();
+        render();
     }
 
-    function locateUser() {
-        if (!navigator.geolocation) return alert("GPS not supported");
-        
-        navigator.geolocation.getCurrentPosition(pos => {
-            const { latitude, longitude } = pos.coords;
-            map.flyTo([latitude, longitude], 15, { duration: 1.5 });
-            
-            L.circleMarker([latitude, longitude], {
-                radius: 10, color: 'white', fillColor: '#5d5fef', fillOpacity: 1, weight: 3
-            }).addTo(map);
-
-            renderBuses();
-        });
+    // ავტომატური ლოკაცია საიტის გახსნისას
+    function autoLocate() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(pos => {
+                const { latitude, longitude } = pos.coords;
+                document.getElementById('loading-gps').style.display = 'none';
+                map.flyTo([latitude, longitude], 15);
+                L.circleMarker([latitude, longitude], {radius: 8, color: '#fff', fillColor: '#5d5fef', fillOpacity: 1, weight: 3}).addTo(map);
+                render();
+            }, () => {
+                document.getElementById('t-wait').innerText = "გთხოვთ, დაუშვათ GPS წვდომა ბრაუზერში";
+            }, { enableHighAccuracy: true });
+        }
     }
 
-    function renderBuses() {
-        const container = document.getElementById('bus-container');
-        container.innerHTML = '';
-        
-        const mockData = [
-            { id: 1, nr: '37', route: 'Samgori - Airport', time: 13, color: '#3b82f6', fav: true },
-            { id: 2, nr: '55', route: 'Varketili - Delisi', time: 8, color: '#10b981', fav: false },
-            { id: 3, nr: '121', route: 'Isani - Saburtalo', time: 5, color: '#f59e0b', fav: false }
+    function render() {
+        const list = document.getElementById('list');
+        list.innerHTML = '';
+        const data = [
+            { nr: '337', from: 'Samgori', to: 'Airport', time: 5, col: '#3b82f6' },
+            { nr: '314', from: 'Dighomi', to: 'Center', time: 12, col: '#10b981' },
+            { nr: '301', from: 'Isani', to: 'Politkovskaya', time: 2, col: '#f59e0b' }
         ];
-
-        mockData.forEach(bus => {
-            const card = document.createElement('div');
-            card.className = 'bus-card';
-            card.innerHTML = `
-                <div class="bus-badge" style="background:${bus.color}">${bus.nr}</div>
-                <div class="bus-details">
-                    <b>${bus.route}</b>
-                    <span>🕒 ~${bus.time} ${i18n[currentLang].min} • 4 ${i18n[currentLang].vehicles}</span>
-                </div>
-                <div class="fav-icon ${bus.fav ? 'active' : ''}">★</div>
-            `;
-            container.appendChild(card);
+        data.forEach(b => {
+            list.innerHTML += `
+                <div class="card">
+                    <div class="b-nr" style="background:${b.col}">${b.nr}</div>
+                    <div class="b-info">
+                        <b>${b.from} - ${b.to}</b>
+                        <span>~${b.time} ${lang[cur].min} • რეალურ დროში</span>
+                    </div>
+                    <div class="star">★</div>
+                </div>`;
         });
     }
 </script>
-
 </body>
 </html>
+
+
 
 
