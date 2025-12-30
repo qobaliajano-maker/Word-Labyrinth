@@ -5,60 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZUGDIDI HUB</title>
     <style>
-        :root { --main: #5d5fef; --gold: #ffb800; --bg: #f4f7ff; }
-        body { margin: 0; background: var(--bg); font-family: sans-serif; padding-bottom: 100px; }
-        header { background: white; padding: 25px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-radius: 0 0 30px 30px; }
-        .logo { font-size: 26px; font-weight: 900; color: var(--main); }
-        .banner { margin: 15px; padding: 25px; background: #1e1e2c; border-radius: 25px; color: white; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .cat-box { display: flex; gap: 10px; overflow-x: auto; padding: 10px 15px; }
-        .cat { background: white; padding: 10px 20px; border-radius: 15px; font-size: 13px; font-weight: bold; white-space: nowrap; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        /* YouTube სტილის რეკლამა */
+        #video-ad-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: black;
+            z-index: 20000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .ad-video-container { width: 100%; max-width: 600px; position: relative; }
+        video { width: 100%; border-radius: 10px; }
         
-        /* ბიზნეს ბარათი */
-        .card { background: white; margin: 15px; padding: 18px; border-radius: 25px; display: flex; align-items: center; gap: 15px; position: relative; border: 1px solid #eee; }
-        .biz-icon { width: 70px; height: 70px; border-radius: 18px; background: #f0f2f8; display: flex; align-items: center; justify-content: center; font-size: 35px; }
-        .vip-tag { position: absolute; top: 10px; right: 10px; background: var(--gold); color: white; font-size: 10px; padding: 4px 10px; border-radius: 8px; font-weight: bold; }
-        
-        .wa-btn { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #25D366; color: white; padding: 18px; border-radius: 40px; text-decoration: none; width: 85%; text-align: center; font-weight: bold; box-shadow: 0 10px 25px rgba(37,211,102,0.3); z-index: 1000; }
+        .skip-btn {
+            position: absolute;
+            bottom: 20px; right: 0;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px 20px;
+            border: 1px solid white;
+            font-size: 14px;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        .skip-btn.active { cursor: pointer; opacity: 1; background: white; color: black; }
     </style>
 </head>
 <body>
 
-<header><div class="logo">ZUGDIDI HUB</div></header>
-
-<div class="banner">
-    <h2 style="color:var(--gold); margin:0;">TOP რეკლამა 🚀</h2>
-    <p style="font-size:12px; opacity:0.8;">გახადე შენი ბიზნესი ყველაზე პოპულარული</p>
-    <a href="https://wa.me/995558484604?text=მინდა_VIP" style="background:var(--gold); color:black; padding:8px 20px; border-radius:10px; text-decoration:none; font-weight:bold; font-size:13px;">დაჯავშნა</a>
-</div>
-
-<div class="cat-box">
-    <div class="cat" style="background:var(--main); color:white;">ყველა</div>
-    <div class="cat">🍴 რესტორნები</div>
-    <div class="cat">🛍 მაღაზიები</div>
-</div>
-
-<div class="list">
-    <div class="card">
-        <div class="vip-tag">VIP</div>
-        <div class="biz-icon">🍴</div>
-        <div>
-            <b style="font-size:17px;">რესტორანი "დიარონი"</b><br>
-            <small style="color:#777;">📍 თბილისის ქუჩა, ზუგდიდი</small><br>
-            <a href="tel:558484604" style="color:var(--main); font-weight:bold; text-decoration:none; font-size:14px;">📞 დარეკვა</a>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="biz-icon">☕</div>
-        <div>
-            <b style="font-size:17px;">კაფე "მენძელი"</b><br>
-            <small style="color:#777;">📍 გამსახურდიას გამზირი</small><br>
-            <a href="tel:558484604" style="color:var(--main); font-weight:bold; text-decoration:none; font-size:14px;">📞 დარეკვა</a>
-        </div>
+<div id="video-ad-overlay">
+    <div class="ad-video-container">
+        <p style="color:white; text-align:center;">რეკლამა</p>
+        <video id="myAdVideo" autoplay muted>
+            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+        </video>
+        <div id="skipBtn" class="skip-btn">შეგიძლიათ გამოტოვოთ 5 წამში</div>
     </div>
 </div>
 
-<a href="https://wa.me/995558484604" class="wa-btn">➕ ბიზნესის დამატება</a>
+<script>
+    let timeLeft = 5;
+    let skipBtn = document.getElementById('skipBtn');
+    let overlay = document.getElementById('video-ad-overlay');
+
+    let timer = setInterval(function(){
+        timeLeft--;
+        if(timeLeft > 0) {
+            skipBtn.innerHTML = "შეგიძლიათ გამოტოვოთ " + timeLeft + " წამში";
+        } else {
+            skipBtn.innerHTML = "გამოტოვება ➔";
+            skipBtn.classList.add('active');
+            skipBtn.onclick = function() {
+                overlay.style.display = 'none';
+            }
+            clearInterval(timer);
+        }
+    }, 1000);
+</script>
+
+<header><h1>ZUGDIDI HUB</h1></header>
 
 </body>
 </html>
