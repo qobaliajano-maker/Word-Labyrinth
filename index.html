@@ -3,135 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Z-CONNECT | Discover</title>
+    <title>Z-CONNECT</title>
     <style>
-        :root { --badoo-purple: #783cff; --badoo-pink: #ff4b7d; --bg: #ffffff; }
-        * { box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; }
+        :root { --badoo-purple: #783cff; --bg: #f3f5f9; }
+        * { box-sizing: border-box; font-family: -apple-system, sans-serif; }
         body { margin: 0; background: var(--bg); overflow-x: hidden; }
 
-        /* Header */
         header { 
             padding: 15px 20px; display: flex; justify-content: space-between; 
-            align-items: center; position: sticky; top: 0; background: white; z-index: 100;
+            align-items: center; background: white; position: sticky; top: 0; z-index: 100;
         }
-        .logo { font-size: 22px; font-weight: 800; color: var(--badoo-purple); }
-        .lang-select button { border: none; background: none; font-weight: 600; color: #ccc; cursor: pointer; }
-        .lang-select .active { color: var(--badoo-purple); }
+        .logo { font-size: 24px; font-weight: 800; color: var(--badoo-purple); letter-spacing: -1px; }
+        .lang-switch button { border: none; background: none; font-weight: bold; color: #ccc; cursor: pointer; }
+        .lang-switch .active { color: var(--badoo-purple); }
 
-        /* Discover Feed */
-        .discover-container { padding: 10px; max-width: 500px; margin: auto; }
-        
-        .profile-card { 
-            position: relative; width: 100%; border-radius: 25px; 
-            overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            margin-bottom: 20px; background: #000; height: 75vh;
+        .app-container { padding: 10px; max-width: 500px; margin: auto; }
+
+        /* Profile Card - Badoo Style */
+        .card { 
+            position: relative; width: 100%; height: 78vh; border-radius: 30px; 
+            overflow: hidden; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 20px;
         }
-        .profile-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; }
+        .card-img { width: 100%; height: 100%; object-fit: cover; }
         
-        .profile-details { 
+        .card-overlay { 
             position: absolute; bottom: 0; left: 0; width: 100%; 
-            padding: 25px; background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 30px 20px; background: linear-gradient(transparent, rgba(0,0,0,0.9));
             color: white; 
         }
-        .name-age { font-size: 26px; font-weight: bold; margin-bottom: 5px; }
-        .location { font-size: 14px; opacity: 0.8; margin-bottom: 15px; }
+        .card-name { font-size: 28px; font-weight: bold; margin-bottom: 5px; }
+        .card-loc { font-size: 14px; opacity: 0.8; margin-bottom: 15px; display: flex; align-items: center; gap: 5px; }
         
-        /* Action Buttons */
-        .actions { display: flex; gap: 15px; }
-        .btn { 
-            flex: 1; padding: 12px; border: none; border-radius: 15px; 
-            font-weight: bold; cursor: pointer; text-align: center; text-decoration: none;
+        .chat-btn { 
+            display: block; width: 100%; padding: 16px; background: var(--badoo-purple); 
+            color: white; text-decoration: none; text-align: center; border-radius: 20px; 
+            font-weight: bold; font-size: 16px; transition: 0.3s;
         }
-        .btn-chat { background: var(--badoo-purple); color: white; }
-        .btn-like { background: white; color: var(--badoo-pink); }
 
-        /* Upload Form (Hidden until needed) */
-        .add-profile-btn {
-            position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px;
+        /* Floating Add Button */
+        .add-btn {
+            position: fixed; bottom: 25px; right: 25px; width: 65px; height: 65px;
             background: var(--badoo-purple); color: white; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 30px; box-shadow: 0 5px 15px rgba(120,60,255,0.4);
-            cursor: pointer; z-index: 200; border: none;
+            font-size: 35px; box-shadow: 0 8px 20px rgba(120,60,255,0.4);
+            cursor: pointer; z-index: 1000; border: none;
         }
-        
-        #upload-modal {
+
+        /* Full Screen Form */
+        #form-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: white; z-index: 300; display: none; padding: 20px;
+            background: white; z-index: 2000; display: none; padding: 25px; overflow-y: auto;
         }
-        .close-modal { font-size: 24px; cursor: pointer; margin-bottom: 20px; display: block; }
-        input, textarea { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid #eee; border-radius: 12px; }
+        .close-form { font-size: 30px; color: #333; cursor: pointer; margin-bottom: 20px; display: block; }
+        input, textarea { width: 100%; padding: 18px; margin-bottom: 15px; border: 1px solid #eee; border-radius: 18px; background: #f9f9f9; font-size: 16px; }
+        .submit-btn { width: 100%; padding: 18px; background: var(--badoo-purple); color: white; border: none; border-radius: 18px; font-weight: bold; font-size: 18px; }
     </style>
 </head>
 <body>
 
 <header>
     <div class="logo">z-connect</div>
-    <div class="lang-select">
-        <button onclick="changeL('ka')" id="ka" class="active">KA</button>
-        <button onclick="changeL('en')" id="en">EN</button>
+    <div class="lang-switch">
+        <button onclick="setLang('ka')" id="l-ka" class="active">KA</button>
+        <button onclick="setLang('en')" id="l-en">EN</button>
     </div>
 </header>
 
-<div class="discover-container" id="feed">
+<div class="app-container" id="feed">
     </div>
 
-<button class="add-profile-btn" onclick="openModal()">+</button>
+<button class="add-btn" onclick="toggleForm(true)">+</button>
 
-<div id="upload-modal">
-    <span class="close-modal" onclick="closeModal()">✕</span>
-    <h2 id="m-title">შექმენი პროფილი</h2>
-    <input type="text" id="m-name" placeholder="სახელი და ასაკი">
-    <input type="text" id="m-loc" placeholder="ქალაქი (მაგ: ზუგდიდი)">
-    <input type="text" id="m-soc" placeholder="ინსტაგრამის ლინკი">
-    <textarea id="m-bio" placeholder="მოკლე აღწერა..."></textarea>
-    <input type="file" id="m-file" accept="image/*">
-    <button class="btn btn-chat" onclick="saveProfile()" style="width:100%" id="m-btn">გამოქვეყნება</button>
+<div id="form-modal">
+    <span class="close-form" onclick="toggleForm(false)">✕</span>
+    <h2 id="t-title">შექმენი პროფილი</h2>
+    <input type="text" id="f-name" placeholder="სახელი და ასაკი">
+    <input type="text" id="f-loc" placeholder="ქალაქი">
+    <input type="text" id="f-soc" placeholder="Instagram (ლინკი ან @სახელი)">
+    <textarea id="f-bio" placeholder="მოკლე აღწერა (მაგ: ვეძებ მეგობრებს)"></textarea>
+    <p style="font-size: 12px; color: #999; margin-left: 10px;">ატვირთე ფოტო:</p>
+    <input type="file" id="f-file" accept="image/*">
+    <button class="submit-btn" onclick="save()" id="t-btn">გამოქვეყნება</button>
 </div>
 
 <script>
-    const ui = {
-        ka: { title: "შექმენი პროფილი", name: "სახელი და ასაკი", loc: "ქალაქი", soc: "ინსტაგრამი", bio: "აღწერა", btn: "გამოქვეყნება", chat: "ჩატი" },
-        en: { title: "Create Profile", name: "Name and Age", loc: "City", soc: "Instagram", bio: "Bio", btn: "Publish", chat: "Chat" }
+    const trans = {
+        ka: { title: "შექმენი პროფილი", name: "სახელი და ასაკი", loc: "ქალაქი", soc: "Instagram", bio: "მოკლე აღწერა", btn: "გამოქვეყნება", chat: "გაიცანი" },
+        en: { title: "Create Profile", name: "Name and Age", loc: "City", soc: "Instagram", bio: "Short bio", btn: "Publish", chat: "Connect" }
     };
 
     let curL = 'ka';
-    function changeL(l) {
+    function setLang(l) {
         curL = l;
-        document.getElementById('m-title').innerText = ui[l].title;
-        document.getElementById('m-name').placeholder = ui[l].name;
-        document.getElementById('m-btn').innerText = ui[l].btn;
-        document.querySelectorAll('.lang-select button').forEach(b => b.classList.remove('active'));
-        document.getElementById(l).classList.add('active');
+        document.getElementById('t-title').innerText = trans[l].title;
+        document.getElementById('f-name').placeholder = trans[l].name;
+        document.getElementById('f-loc').placeholder = trans[l].loc;
+        document.getElementById('f-soc').placeholder = trans[l].soc;
+        document.getElementById('f-bio').placeholder = trans[l].bio;
+        document.getElementById('t-btn').innerText = trans[l].btn;
+        document.querySelectorAll('.lang-switch button').forEach(b => b.classList.remove('active'));
+        document.getElementById('l-'+l).classList.add('active');
     }
 
-    function openModal() { document.getElementById('upload-modal').style.display = 'block'; }
-    function closeModal() { document.getElementById('upload-modal').style.display = 'none'; }
+    function toggleForm(show) { document.getElementById('form-modal').style.display = show ? 'block' : 'none'; }
 
-    function saveProfile() {
-        const name = document.getElementById('m-name').value;
-        const loc = document.getElementById('m-loc').value;
-        const soc = document.getElementById('m-soc').value;
-        const bio = document.getElementById('m-bio').value;
-        const file = document.getElementById('m-file').files[0];
+    function save() {
+        const name = document.getElementById('f-name').value;
+        const loc = document.getElementById('f-loc').value;
+        const soc = document.getElementById('f-soc').value;
+        const bio = document.getElementById('f-bio').value;
+        const file = document.getElementById('f-file').files[0];
 
-        if(!name || !file) return alert("შეავსეთ მონაცემები!");
+        if(!name || !file) return alert("შეავსეთ სახელი და ატვირთეთ ფოტო!");
 
         const reader = new FileReader();
         reader.onload = function(e) {
             const card = `
-                <div class="profile-card">
-                    <img src="${e.target.result}" class="profile-img">
-                    <div class="profile-details">
-                        <div class="name-age">${name}</div>
-                        <div class="location">📍 ${loc}</div>
-                        <p style="font-size:14px; margin-bottom:20px;">${bio}</p>
-                        <div class="actions">
-                            <a href="${soc.startsWith('http') ? soc : 'https://' + soc}" class="btn btn-chat">${ui[curL].chat}</a>
-                        </div>
+                <div class="card">
+                    <img src="${e.target.result}" class="card-img">
+                    <div class="card-overlay">
+                        <div class="card-name">${name}</div>
+                        <div class="card-loc">📍 ${loc}</div>
+                        <p style="font-size:15px; margin-bottom:20px; opacity:0.9;">${bio}</p>
+                        <a href="${soc.startsWith('http') ? soc : 'https://instagram.com/' + soc.replace('@','')}" target="_blank" class="chat-btn">${trans[curL].chat}</a>
                     </div>
                 </div>`;
             document.getElementById('feed').insertAdjacentHTML('afterbegin', card);
-            closeModal();
+            toggleForm(false);
+            // Reset fields
+            document.getElementById('f-name').value = "";
+            document.getElementById('f-loc').value = "";
+            document.getElementById('f-soc').value = "";
+            document.getElementById('f-bio').value = "";
         };
         reader.readAsDataURL(file);
     }
@@ -139,6 +142,7 @@
 
 </body>
 </html>
+
 
 
 
