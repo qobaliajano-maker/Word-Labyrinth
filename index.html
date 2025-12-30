@@ -3,109 +3,118 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-// ხატულების გასწორება Leaflet-ისთვის
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
-
-// 1. თარგმანების ობიექტი
+// 1. ენების ბაზა
 const translations = {
-  ka: { title: "თბილისის ტრანსპორტი", search: "სად მიდიხართ?", start: "თქვენი მდებარეობა", go: "მიყვანე აქ", min: "წთ", routes: "მარშრუტები" },
-  en: { title: "Tbilisi Transport", search: "Where to?", start: "Your Location", go: "Get Directions", min: "min", routes: "Routes" },
-  ru: { title: "Тбилисский Транспорт", search: "Куда едем?", start: "Ваше местоположение", go: "Маршрут", min: "мин", routes: "Маршруты" }
+  ka: { title: "თბილისის ტრანსპორტი", search: "საით მიდიხართ?", start: "თქვენი ადგილი", go: "მარშრუტი", min: "წთ", findMe: "ჩემი ლოკაცია" },
+  en: { title: "Tbilisi Transport", search: "Where to?", start: "Your Location", go: "Route", min: "min", findMe: "Find Me" },
+  ru: { title: "Тбилисский Транспорт", search: "Куда едем?", start: "Вы здесь", go: "Путь", min: "мин", findMe: "Где я?" }
 };
 
-// 2. სატესტო მონაცემები (ლოკაციებით)
-const initialBuses = [
-  { id: 1, number: '37', from: 'Samgori', to: 'Dighomi', coords: [41.685, 44.825], time: 13, color: '#3b82f6' },
-  { id: 2, number: '55', from: 'Varketili', to: 'Delisi', coords: [41.725, 44.755], time: 8, color: '#10b981' }
-];
+// კომპონენტი რუკის ხედვის ავტომატური ცვლილებისთვის
+function ChangeView({ center }) {
+  const map = useMap();
+  map.setView(center, 15);
+  return null;
+}
 
 const App = () => {
   const [lang, setLang] = useState('ka');
-  const [userLoc] = useState([41.7151, 44.7870]); // თბილისის ცენტრი
+  const [userLoc, setUserLoc] = useState([41.7151, 44.7870]); // Default: თბილისი
   const [targetLoc, setTargetLoc] = useState(null);
-  const [buses, setBuses] = useState(initialBuses);
+  const [isLocating, setIsLocating] = useState(false);
   const t = translations[lang];
 
-  // რეალური დროის იმიტაცია - დროის კლება
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setBuses(prev => prev.map(b => ({ ...b, time: b.time > 1 ? b.time - 1 : 15 })));
-    }, 10000);
-    return () => clearInterval(timer);
-  }, []);
+  // 2. GPS ლოკაციის ამოცნობა
+  const findMyLocation = () => {
+    if (navigator.geolocation) {
+      setIsLocating(true);
+      navigator.geolocation.getCurrentPosition((position) => {
+        setUserLoc([position.coords.latitude, position.coords.longitude]);
+        setIsLocating(false);
+      }, (error) => {
+        alert("GPS-ზე წვდომა უარყოფილია");
+        setIsLocating(false);
+      });
+    }
+  };
 
-  const handleRouteClick = (coords) => {
+  const handleRoute = (coords) => {
     setTargetLoc(coords);
   };
 
   return (
-    <div style={styles.container}>
-      {/* Header */}
-      <div style={styles.header}>
-        <div style={styles.langBar}>
+    <div style={styles.app}>
+      {/* ენის და ლოკაციის მართვა */}
+      <div style={styles.topBar}>
+        <div style={styles.langs}>
           {['ka', 'en', 'ru'].map(l => (
-            <button key={l} onClick={() => setLang(l)} style={lang === l ? styles.activeLang : styles.langBtn}>
-              {l.toUpperCase()}
-            </button>
+            <button key={l} onClick={() => setLang(l)} style={lang === l ? styles.activeLang : styles.langBtn}>{l.toUpperCase()}</button>
           ))}
         </div>
-        <h2 style={styles.title}>{t.title}</h2>
+        <button onClick={findMyLocation} style={styles.gpsBtn}>
+          {isLocating ? "..." : `📍 ${t.findMe}`}
+        </button>
       </div>
 
-      {/* Map Section */}
-      <div style={styles.mapWrapper}>
-        <MapContainer center={userLoc} zoom={13} style={{ height: '100%', width: '100%' }}>
+      {/* რუკა */}
+      <div style={styles.mapContainer}>
+        <MapContainer center={userLoc} zoom={13} style={{ height: '100%' }}>
+          <ChangeView center={userLoc} />
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          <Marker position={userLoc}><Popup>{t.start}</Popup></Marker>
           
+          <Marker position={userLoc} icon={new L.Icon({iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png', iconSize: [25, 41], iconAnchor: [12, 41]})}>
+            <Popup>{t.start}</Popup>
+          </Marker>
+
           {targetLoc && (
             <>
-              <Marker position={targetLoc}><Popup>Destination</Popup></Marker>
-              <Polyline positions={[userLoc, targetLoc]} color="blue" dashArray="10, 10" />
+              <Marker position={targetLoc} icon={new L.Icon({iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png', iconSize: [25, 41], iconAnchor: [12, 41]})} />
+              <Polyline positions={[userLoc, targetLoc]} color="#3b82f6" weight={5} opacity={0.7} dashArray="10, 10" />
             </>
           )}
         </MapContainer>
       </div>
 
-      {/* Routes List */}
-      <div style={styles.listSection}>
-        <h3>{t.routes}</h3>
-        {buses.map(bus => (
-          <div key={bus.id} style={styles.card} onClick={() => handleRouteClick(bus.coords)}>
-            <div style={{ ...styles.busCircle, backgroundColor: bus.color }}>{bus.number}</div>
-            <div style={styles.busInfo}>
-              <div style={styles.busName}>{bus.from} - {bus.to}</div>
-              <div style={styles.busTime}>~{bus.time} {t.min}</div>
-            </div>
-            <button style={styles.goBtn}>{t.go}</button>
+      {/* ინფორმაციის პანელი */}
+      <div style={styles.bottomSheet}>
+        <h2 style={{fontSize: '18px', marginBottom: '15px'}}>{t.title}</h2>
+        
+        {/* სატესტო მარშრუტები */}
+        <div style={styles.card} onClick={() => handleRoute([41.691, 44.890])}>
+          <div style={{...styles.num, background: '#3b82f6'}}>37</div>
+          <div style={styles.info}>
+            <b>Samgori - Airport</b>
+            <span>~12 {t.min}</span>
           </div>
-        ))}
+          <button style={styles.goBtn}>{t.go}</button>
+        </div>
+
+        <div style={styles.card} onClick={() => handleRoute([41.721, 44.760])}>
+          <div style={{...styles.num, background: '#10b981'}}>55</div>
+          <div style={styles.info}>
+            <b>Varketili - City Mall</b>
+            <span>~5 {t.min}</span>
+          </div>
+          <button style={styles.goBtn}>{t.go}</button>
+        </div>
       </div>
     </div>
   );
 };
 
-// 3. სტილები (Inline-CSS მაქსიმალური სიმარტივისთვის)
 const styles = {
-  container: { fontFamily: 'Segoe UI, sans-serif', backgroundColor: '#f0f2f5', height: '100vh', display: 'flex', flexDirection: 'column' },
-  header: { padding: '20px', background: '#fff', borderBottom: '1px solid #ddd' },
-  langBar: { display: 'flex', gap: '10px', marginBottom: '10px' },
-  langBtn: { border: 'none', background: '#eee', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer' },
-  activeLang: { border: 'none', background: '#3b82f6', color: '#fff', padding: '5px 10px', borderRadius: '5px' },
-  title: { margin: 0, fontSize: '20px' },
-  mapWrapper: { height: '300px', width: '100%', position: 'relative' },
-  listSection: { padding: '20px', overflowY: 'auto', flex: 1 },
-  card: { display: 'flex', alignItems: 'center', background: '#fff', padding: '15px', borderRadius: '15px', marginBottom: '10px', boxShadow: '0 2px 5px rgba(0,0,0,0.1)', cursor: 'pointer' },
-  busCircle: { width: '45px', height: '45px', borderRadius: '50%', color: '#fff', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', marginRight: '15px' },
-  busInfo: { flex: 1 },
-  busName: { fontWeight: '600' },
-  busTime: { color: '#666', fontSize: '14px' },
-  goBtn: { background: '#f0f7ff', color: '#3b82f6', border: 'none', padding: '8px 12px', borderRadius: '8px', fontWeight: 'bold' }
+  app: { fontFamily: 'sans-serif', height: '100vh', display: 'flex', flexDirection: 'column', background: '#f8f9fa' },
+  topBar: { padding: '15px', display: 'flex', justifyContent: 'space-between', background: '#fff' },
+  langs: { display: 'flex', gap: '5px' },
+  langBtn: { border: '1px solid #ddd', padding: '5px 8px', borderRadius: '5px', background: 'none' },
+  activeLang: { background: '#3b82f6', color: '#fff', border: 'none', padding: '5px 8px', borderRadius: '5px' },
+  gpsBtn: { background: '#000', color: '#fff', border: 'none', padding: '8px 12px', borderRadius: '10px', cursor: 'pointer' },
+  mapContainer: { flex: 2, borderBottomLeftRadius: '25px', borderBottomRightRadius: '25px', overflow: 'hidden' },
+  bottomSheet: { flex: 1.5, padding: '20px', overflowY: 'auto' },
+  card: { display: 'flex', alignItems: 'center', background: '#fff', padding: '15px', borderRadius: '16px', marginBottom: '10px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' },
+  num: { width: '40px', height: '40px', borderRadius: '10px', color: '#fff', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', marginRight: '15px' },
+  info: { flex: 1, display: 'flex', flexDirection: 'column' },
+  goBtn: { background: '#eef2ff', color: '#3b82f6', border: 'none', padding: '10px 15px', borderRadius: '10px', fontWeight: '600' }
 };
 
 export default App;
