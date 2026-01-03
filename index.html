@@ -7,17 +7,15 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-app-pub-1016750863743823" crossorigin="anonymous"></script>
     <style>
         :root { --p: #6c5ce7; --s: #00b894; }
-        body { font-family: sans-serif; background: #f0f2f5; margin: 0; display: flex; flex-direction: column; min-height: 100vh; align-items: center; }
-        .card { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-top: 50px; }
-        h1 { color: var(--p); }
+        body { font-family: sans-serif; background: #f0f2f5; margin: 0; display: flex; flex-direction: column; min-height: 100vh; align-items: center; justify-content: center; }
+        .card { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .hint { background: #eef2f7; padding: 20px; border-radius: 10px; margin: 20px 0; font-size: 1.1em; border-left: 5px solid var(--p); }
         input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1.1em; box-sizing: border-box; outline: none; }
-        .btns { display: grid; gap: 10px; margin-top: 10px; }
-        button { padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; }
+        .btns { display: grid; gap: 10px; margin-top: 15px; }
+        button { padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; }
         .btn-check { background: var(--s); }
         .btn-reward { background: var(--p); }
-        button:hover { opacity: 0.8; }
-        .ad-box { margin-top: auto; padding: 20px; background: #eee; width: 100%; text-align: center; }
+        .ad-box { margin-top: 20px; width: 100%; text-align: center; }
     </style>
 </head>
 <body>
@@ -25,12 +23,12 @@
         <h1>სიტყვის ოსტატი</h1>
         <p>დონე: <span id="lvl">1</span> | ქულა: <span id="sc">0</span></p>
         <div class="hint" id="hint">იტვირთება...</div>
-        <input type="text" id="ans" placeholder="ჩაწერე პასუხი..." autocomplete="off">
+        <input type="text" id="ans" placeholder="ჩაწერე პასუხი...">
         <div class="btns">
             <button class="btn-check" onclick="check()">შემოწმება</button>
-            <button class="btn-reward" onclick="showReward()">🎁 პასუხის გაგება (ვიდეო)</button>
+            <button class="btn-reward" onclick="showReward()">🎁 მინიშნება (ვიდეო)</button>
         </div>
-        <p id="msg" style="font-weight: bold; margin-top: 15px;"></p>
+        <p id="msg" style="font-weight: bold; margin-top: 10px;"></p>
     </div>
 
     <div class="ad-box">
@@ -42,28 +40,10 @@
 
     <script>
         const data = [
-            {w:"მზე", h:"დღისით ანათებს და გვათბობს"},
-            {w:"ხაჭაპური", h:"პოპულარული ქართული ყველიანი ცომეული"},
-            {w:"თბილისი", h:"საქართველოს დედაქალაქი"},
-            {w:"ზუგდიდი", h:"ქალაქი სამეგრელოში, სადაც შენ ხარ"},
-            {w:"ლომი", h:"ცხოველთა მეფე"},
-            {w:"წყალი", h:"უფერო სითხე, რომელსაც ვსვამთ"},
-            {w:"ვაშლი", h:"მრგვალი ხილი, წითელი ან მწვანე"},
-            {w:"სკოლა", h:"შენობა, სადაც ბავშვები სწავლობენ"},
-            {w:"პური", h:"ფქვილისგან გამომცხვარი ძირითადი საკვები"},
-            {w:"მთა", h:"დედამიწის ზედაპირის ძალიან მაღალი ადგილი"},
-            {w:"წიგნი", h:"ფურცლების ნაკრები, რომელსაც ვკითხულობთ"},
-            {w:"მანქანა", h:"ტრანსპორტი ოთხი ბორბლით"},
-            {w:"მდინარე", h:"წყლის ბუნებრივი ნაკადი, რომელიც მიედინება"},
-            {w:"წვიმა", h:"ციდან წამოსული წყლის წვეთები"},
-            {w:"კატა", h:"შინაური ცხოველი, რომელიც ამბობს მიაუ"},
-            {w:"ძაღლი", h:"ადამიანის ყველაზე ერთგული მეგობარი"},
-            {w:"თევზი", h:"წყლის ბინადარი, რომელიც ფარფლებით დაცურავს"},
-            {w:"ჩაი", h:"ცხელი სასმელი, რომელსაც ხშირად ლიმონით ვსვამთ"},
-            {w:"ყვავილი", h:"მცენარის ლამაზი და სურნელოვანი ნაწილი"},
-            {w:"თოვლი", h:"ზამთარში ციდან წამოსული თეთრი ფიფქები"}
+            {w:"მზე", h:"დღისით ანათებს"}, {w:"პური", h:"ფქვილისგან ცხვება"}, {w:"თბილისი", h:"დედაქალაქი"},
+            {w:"ზუგდიდი", h:"ქალაქი სამეგრელოში"}, {w:"ვაშლი", h:"წითელი ხილი"}, {w:"ზღვა", h:"მარილიანი წყალი"},
+            {w:"ლომი", h:"ცხოველთა მეფე"}, {w:"წიგნი", h:"ცოდნის წყარო"}, {w:"რძე", h:"თეთრი სასმელი"}
         ];
-
         let idx = 0, pts = 0;
         function show() {
             if(idx < data.length) {
@@ -72,28 +52,19 @@
                 document.getElementById('ans').value = "";
                 document.getElementById('msg').innerText = "";
             } else {
-                document.querySelector('.card').innerHTML = "<h2>მოიგე! 🎉</h2><p>შენ ყველა სიტყვა გამოიცანი.</p><button class='btn-check' onclick='location.reload()'>თავიდან დაწყება</button>";
+                document.querySelector('.card').innerHTML = "<h2>მოიგე! 🎉</h2><button onclick='location.reload()'>თავიდან</button>";
             }
         }
-
         function check() {
-            let val = document.getElementById('ans').value.trim().toLowerCase();
-            if(val == data[idx].w.toLowerCase()) {
+            if(document.getElementById('ans').value.trim().toLowerCase() == data[idx].w.toLowerCase()) {
                 idx++; pts+=10; document.getElementById('sc').innerText = pts;
-                document.getElementById('msg').style.color = "green";
                 document.getElementById('msg').innerText = "სწორია! ✨";
-                setTimeout(show, 800);
-            } else {
-                document.getElementById('msg').style.color = "red";
-                document.getElementById('msg').innerText = "არასწორია ❌ სცადე კიდევ!";
-            }
+                setTimeout(show, 1000);
+            } else { document.getElementById('msg').innerText = "სცადე კიდევ! ❌"; }
         }
-
-        // Rewarded რეკლამის ფუნქცია (Reward_Hint ID: ca-app-pub-1016750863743823/1419584294)
         function showReward() {
-            alert("რეკლამა იტვირთება... (როცა Google დაამტკიცებს საიტს, აქ ვიდეო ჩაირთვება)");
-            // ავტომატურად ვწერთ პასუხს რეკლამის ყურების სანაცვლოდ
-            document.getElementById('ans').value = data[idx].w;
+            alert("ვიდეო რეკლამა იტვირთება... (ამუშავდება Ready სტატუსის შემდეგ)");
+            document.getElementById('ans').value = data[idx].w; // ავტომატური შევსება
             check();
         }
         show();
