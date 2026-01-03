@@ -4,42 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <meta property="og:title" content="სიტყვების სამყარო 🏆">
-    <meta property="og:description" content="გამოიცანი სიტყვები და მოიგე! უამრავი საინტერესო ტური.">
+    <meta property="og:title" content="Word Labyrinth 🏆">
+    <meta property="og:description" content="გაიარე სიტყვების ლაბირინთი და დააგროვე ქულები! 🎮">
     <meta property="og:image" content="https://img.freepik.com/free-vector/word-concept-illustration_114360-1123.jpg">
-    <meta property="og:url" content="https://qobaliajano-maker.github.io/Word-World/">
+    <meta property="og:url" content="https://qobaliajano-maker.github.io/Word-Labyrinth/">
     <meta property="og:type" content="website">
 
-    <title>სიტყვების სამყარო</title>
+    <title>Word Labyrinth</title>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-app-pub-1016750863743823" crossorigin="anonymous"></script>
 
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; display: flex; flex-direction: column; align-items: center; padding-top: 40px; }
-        .card { background: white; padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        h1 { color: #6c5ce7; }
-        .hint { background: #f8f9fa; padding: 20px; border-radius: 12px; margin: 20px 0; font-size: 1.2em; border-left: 6px solid #6c5ce7; }
-        input { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 1.1em; box-sizing: border-box; outline: none; }
+        body { font-family: sans-serif; background: #f0f2f5; display: flex; flex-direction: column; align-items: center; padding-top: 50px; }
+        .card { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        h1 { color: #6c5ce7; font-size: 1.8em; }
+        .hint { background: #f8f9fa; padding: 20px; border-radius: 12px; margin: 20px 0; font-size: 1.1em; border-left: 6px solid #6c5ce7; }
+        input { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 1.1em; box-sizing: border-box; }
         .btns { display: grid; gap: 10px; margin-top: 15px; }
-        button { padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: white; font-size: 1em; }
+        button { padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: white; }
         .btn-check { background: #00b894; }
         .btn-reward { background: #6c5ce7; }
     </style>
 </head>
 <body>
-
     <div class="card">
-        <h1>სიტყვების სამყარო</h1>
+        <h1>Word Labyrinth</h1>
         <div class="hint" id="hint">იტვირთება...</div>
         <input type="text" id="ans" placeholder="ჩაწერე პასუხი...">
         <div class="btns">
             <button class="btn-check" onclick="check()">შემოწმება</button>
             <button class="btn-reward" onclick="showReward()">🎁 მინიშნება (ვიდეო)</button>
         </div>
-        <p id="msg" style="margin-top: 15px; font-weight: bold;"></p>
     </div>
 
-    <div style="margin-top: 30px;">
+    <div style="margin-top: 20px;">
         <ins class="adsbygoogle" style="display:inline-block;width:320px;height:50px" 
              data-ad-client="ca-app-pub-1016750863743823" 
              data-ad-slot="3797162169"></ins>
@@ -47,35 +45,16 @@
     </div>
 
     <script>
-        const data = [
-            {w:"მზე", h:"დღისით ანათებს და გვათბობს"},
-            {w:"თბილისი", h:"საქართველოს დედაქალაქი"},
-            {w:"ზუგდიდი", h:"ქალაქი სამეგრელოში"},
-            {w:"ხაჭაპური", h:"ყველიანი ცომეული"}
-        ];
+        const data = [{w:"მზე", h:"დღისით ანათებს"}, {w:"თბილისი", h:"დედაქალაქი"}];
         let idx = 0;
-        function show() {
-            if(idx < data.length) {
-                document.getElementById('hint').innerText = data[idx].h;
-                document.getElementById('ans').value = "";
-            } else {
-                document.querySelector('.card').innerHTML = "<h2>გილოცავ! 🎉</h2><button onclick='location.reload()'>თავიდან</button>";
-            }
-        }
+        function show() { document.getElementById('hint').innerText = data[idx].h; }
         function check() {
-            let val = document.getElementById('ans').value.trim().toLowerCase();
-            if(val == data[idx].w.toLowerCase()) {
-                idx++;
-                document.getElementById('msg').innerText = "სწორია! ✨";
-                document.getElementById('msg').style.color = "green";
-                setTimeout(show, 800);
-            } else {
-                document.getElementById('msg').innerText = "არასწორია! ❌";
-                document.getElementById('msg').style.color = "red";
+            if(document.getElementById('ans').value.trim().toLowerCase() == data[idx].w) {
+                idx++; alert("სწორია!"); show();
             }
         }
-        function showReward() {
-            alert("რეკლამა ჩაიტვირთება AdMob-ის დამტკიცების შემდეგ");
+        function showReward() { 
+            alert("ვიდეო რეკლამა ჩაირთვება Ready სტატუსის შემდეგ"); 
             document.getElementById('ans').value = data[idx].w;
         }
         show();
