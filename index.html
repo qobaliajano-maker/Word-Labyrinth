@@ -3,147 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>სიტყვის ოსტატი - ითამაშე და გაერთე</title>
+    <title>სიტყვის ოსტატი</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-app-pub-1016750863743823" crossorigin="anonymous"></script>
     <style>
-        :root {
-            --primary: #6c5ce7;
-            --success: #00b894;
-            --error: #d63031;
-            --bg: #dfe6e9;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            color: #2d3436;
-        }
-        .game-container {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            text-align: center;
-            width: 90%;
-            max-width: 400px;
-        }
-        h1 { color: var(--primary); margin-bottom: 10px; font-size: 24px; }
-        .stats { display: flex; justify-content: space-around; margin-bottom: 20px; font-weight: bold; }
-        .hint-box {
-            background: #f1f2f6;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-style: italic;
-        }
-        input {
-            width: 80%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 18px;
-            margin-bottom: 15px;
-            outline: none;
-            transition: 0.3s;
-        }
-        input:focus { border-color: var(--primary); }
-        button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            width: 85%;
-            transition: 0.2s;
-        }
-        button:active { transform: scale(0.98); }
-        #message { margin-top: 15px; font-weight: bold; min-height: 20px; }
+        :root { --p: #6c5ce7; --s: #00b894; }
+        body { font-family: sans-serif; background: #a29bfe; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        .game-area { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .card { background: white; padding: 25px; border-radius: 25px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        h1 { color: var(--p); margin: 0; font-size: 24px; }
+        .stats { margin: 10px 0; font-weight: bold; color: #555; }
+        .hint { background: #f1f2f6; padding: 20px; border-radius: 15px; margin: 15px 0; min-height: 40px; border-left: 5px solid var(--p); font-size: 18px; }
+        input { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 12px; margin-bottom: 10px; font-size: 18px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: var(--s); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 18px; }
+        #msg { margin-top: 10px; font-weight: bold; height: 20px; }
+        .ad-container { width: 100%; text-align: center; background: #eee; padding: 10px 0; }
     </style>
 </head>
 <body>
 
-<div class="game-container">
-    <h1>სიტყვის ოსტატი</h1>
-    <div class="stats">
-        <span>დონე: <span id="level">1</span></span>
-        <span>ქულა: <span id="score">0</span></span>
+    <div class="game-area">
+        <div class="card">
+            <h1>სიტყვის ოსტატი</h1>
+            <div class="stats">დონე: <span id="l">1</span> | ქულა: <span id="p">0</span></div>
+            <div class="hint" id="h">იტვირთება...</div>
+            <input type="text" id="i" placeholder="ჩაწერე პასუხი..." autocomplete="off">
+            <button onclick="check()">შემოწმება</button>
+            <div id="msg"></div>
+        </div>
     </div>
-    
-    <div class="hint-box" id="hint">მინიშნება გამოჩნდება აქ...</div>
-    
-    <input type="text" id="userInput" placeholder="ჩაწერე პასუხი..." autocomplete="off">
-    <button onclick="checkAnswer()">შემოწმება</button>
-    
-    <div id="message"></div>
-</div>
 
-<script>
-    const words = [
-        { word: "მზე", hint: "ცაზე ანათებს და გვათბობს" },
-        { word: "კომპიუტერი", hint: "მოწყობილობა, რომლითაც ეხლა თამაშობ" },
-        { word: "ხაჭაპური", hint: "პოპულარული ქართული ცომეული ყველით" },
-        { word: "ვეფხისტყაოსანი", hint: "შოთა რუსთაველის უკვდავი პოემა" },
-        { word: "თბილისი", hint: "საქართველოს დედაქალაქი" },
-        { word: "მთა", hint: "ძალიან მაღალი ბუნებრივი წარმონაქმნი" },
-        { word: "წიგნი", hint: "მასში ბევრი საინტერესო ამბავი წერია" }
-    ];
+    <div class="ad-container">
+        <ins class="adsbygoogle"
+             style="display:inline-block;width:320px;height:50px"
+             data-ad-client="ca-app-pub-1016750863743823"
+             data-ad-slot="3797162169"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
 
-    let currentLevel = 0;
-    let score = 0;
-
-    function initGame() {
-        if (currentLevel < words.length) {
-            document.getElementById('hint').innerText = "მინიშნება: " + words[currentLevel].hint;
-            document.getElementById('level').innerText = currentLevel + 1;
-            document.getElementById('userInput').value = "";
-            document.getElementById('message').innerText = "";
-        } else {
-            document.querySelector('.game-container').innerHTML = `
-                <h1>თამაში დასრულდა!</h1>
-                <p>შენი საბოლოო ქულაა: ${score}</p>
-                <button onclick="location.reload()">თავიდან დაწყება</button>
-            `;
+    <script>
+        const words = [
+            { w: "მზე", h: "ცაზე ანათებს და გვათბობს" },
+            { w: "ხაჭაპური", h: "პოპულარული ქართული ცომეული ყველით" },
+            { w: "თბილისი", h: "საქართველოს დედაქალაქი" },
+            { w: "კომპიუტერი", h: "მოწყობილობა, რომლითაც ამას კითხულობ" },
+            { w: "ვეფხისტყაოსანი", h: "რუსთაველის უკვდავი პოემა" }
+        ];
+        let cur = 0, pts = 0;
+        function update() {
+            if(cur < words.length) {
+                document.getElementById('h').innerText = words[cur].h;
+                document.getElementById('l').innerText = cur + 1;
+                document.getElementById('i').value = "";
+                document.getElementById('msg').innerText = "";
+            } else {
+                document.querySelector('.card').innerHTML = "<h2>ყოჩაღ! 🎉</h2><p>შენ ყველა სიტყვა გამოიცანი!</p><button onclick='location.reload()'>თავიდან</button>";
+            }
         }
-    }
-
-    function checkAnswer() {
-        const userValue = document.getElementById('userInput').value.trim().toLowerCase();
-        const correctAnswer = words[currentLevel].word.toLowerCase();
-        const messageEl = document.getElementById('message');
-
-        if (userValue === correctAnswer) {
-            score += 10;
-            document.getElementById('score').innerText = score;
-            messageEl.innerText = "სწორია! 🎉";
-            messageEl.style.color = "var(--success)";
-            
-            currentLevel++;
-            setTimeout(initGame, 1500);
-        } else {
-            messageEl.innerText = "არასწორია, სცადე კიდევ! ❌";
-            messageEl.style.color = "var(--error)";
+        function check() {
+            let val = document.getElementById('i').value.trim().toLowerCase();
+            if(val === words[cur].w.toLowerCase()) {
+                pts += 10; document.getElementById('p').innerText = pts;
+                document.getElementById('msg').innerText = "სწორია! 🎉";
+                document.getElementById('msg').style.color = "green";
+                cur++; setTimeout(update, 1000);
+            } else {
+                document.getElementById('msg').innerText = "სცადე კიდევ! ❌";
+                document.getElementById('msg').style.color = "red";
+            }
         }
-    }
-
-    // "Enter" ღილაკზე დაჭერისას რომ იმუშაოს
-    document.getElementById('userInput').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            checkAnswer();
-        }
-    });
-
-    initGame();
-</script>
-
+        update();
+    </script>
 </body>
 </html>
 
