@@ -17,142 +17,112 @@
     <style>
         :root {
             --primary: #6c5ce7;
-            --secondary: #a29bfe;
-            --accent: #fdcb6e;
-            --bg: #0f0c29;
-            --card-bg: rgba(255, 255, 255, 0.05);
+            --accent: #00b894;
+            --gold: #fdcb6e;
+            --bg: #f0f2f5;
         }
 
         body {
             margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
-            color: white;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             min-height: 100vh;
-            padding: 20px;
+            color: #2d3436;
         }
 
-        .container {
-            width: 100%;
-            max-width: 450px;
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            padding: 40px 20px;
+        .card {
+            background: white;
+            width: 90%;
+            max-width: 400px;
+            padding: 40px 25px;
             border-radius: 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             text-align: center;
-            margin-top: 20px;
+            animation: slideUp 0.6s ease-out;
         }
 
-        h1 {
-            font-size: 2em;
-            background: linear-gradient(to right, #fff, var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .progress-container {
-            width: 100%;
-            height: 8px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
+        h1 { color: var(--primary); margin-bottom: 25px; font-size: 2em; }
 
-        .progress-bar {
-            width: 0%;
-            height: 100%;
-            background: var(--accent);
-            transition: 0.5s ease;
-        }
-
-        .hint-box {
-            background: rgba(108, 92, 231, 0.2);
-            padding: 25px;
+        .hint-container {
+            background: #f8f9fa;
+            padding: 20px;
             border-radius: 20px;
-            font-size: 1.3em;
-            margin: 25px 0;
-            border: 1px dashed var(--secondary);
-            animation: fadeIn 1s;
+            margin-bottom: 25px;
+            border-left: 8px solid var(--primary);
+            font-size: 1.2em;
+            font-weight: 500;
         }
 
         input {
             width: 100%;
             padding: 18px;
+            border: 2px solid #eee;
             border-radius: 15px;
-            border: none;
-            background: rgba(255,255,255,0.9);
             font-size: 1.1em;
-            color: #2d3436;
-            text-align: center;
-            outline: none;
             box-sizing: border-box;
+            margin-bottom: 20px;
+            outline: none;
+            transition: 0.3s;
+            text-align: center;
         }
 
-        .btns {
-            display: grid;
-            gap: 15px;
-            margin-top: 25px;
-        }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(108, 92, 231, 0.2); }
 
-        button {
+        .btn {
+            width: 100%;
             padding: 18px;
             border: none;
             border-radius: 15px;
             font-size: 1.1em;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.3s transform, 0.3s box-shadow;
-        }
-
-        .btn-check {
-            background: var(--accent);
-            color: #2d3436;
-        }
-
-        .btn-reward {
-            background: var(--primary);
             color: white;
+            transition: 0.3s;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        button:active { transform: scale(0.95); }
+        .btn-check { background: var(--accent); }
+        .btn-check:hover { background: #00a383; transform: translateY(-2px); }
 
-        .ad-space {
-            margin-top: auto;
-            padding: 20px 0;
-        }
+        .btn-hint { background: var(--primary); }
+        .btn-hint:hover { background: #5b4cc4; transform: translateY(-2px); }
 
-        @keyframes fadeIn { from {opacity: 0; transform: translateY(-10px);} to {opacity: 1; transform: translateY(0);} }
+        .btn:active { transform: scale(0.98); }
+
+        .stats { margin-top: 20px; font-size: 0.9em; color: #636e72; }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div class="card">
         <h1>Word Labyrinth</h1>
-        <p>დონე <span id="lvl">1</span> / 10</p>
         
-        <div class="progress-container">
-            <div class="progress-bar" id="pBar"></div>
+        <div class="hint-container" id="hint-text">იტვირთება...</div>
+
+        <input type="text" id="user-input" placeholder="ჩაწერე პასუხი..." autocomplete="off">
+
+        <button class="btn btn-check" onclick="handleCheck()">შემოწმება ✅</button>
+        <button class="btn btn-hint" onclick="handleHint()">🎁 მინიშნება (ვიდეო)</button>
+
+        <div class="stats">
+            დონე: <span id="level-num">1</span> / 5
         </div>
-
-        <div class="hint-box" id="hint">იტვირთება...</div>
-
-        <input type="text" id="ans" placeholder="ჩაწერე პასუხი..." autocomplete="off">
-
-        <div class="btns">
-            <button class="btn-check" onclick="check()">შემოწმება ✅</button>
-            <button class="btn-reward" onclick="showReward()">მინიშნება 🎁</button>
-        </div>
-        <p id="msg" style="margin-top: 15px; font-weight: bold;"></p>
     </div>
 
-    <div class="ad-space">
+    <div style="margin-top: 30px;">
         <ins class="adsbygoogle"
              style="display:inline-block;width:320px;height:50px"
              data-ad-client="ca-app-pub-1016750863743823"
@@ -161,61 +131,53 @@
     </div>
 
     <script>
-        const words = [
-            {w: "მზე", h: "ის გვათბობს და ანათებს დღისით"},
-            {w: "თბილისი", h: "საქართველოს ულამაზესი დედაქალაქი"},
-            {w: "ხაჭაპური", h: "ცნობილი ქართული ყველიანი კერძი"},
-            {w: "ზღვა", h: "დიდი მარილიანი წყლის სივრცე"},
-            {w: "წიგნი", h: "ცოდნის და ისტორიების წყარო"},
-            {w: "ლომი", h: "ცხოველთა სამყაროს მეფე"},
-            {w: "მთა", h: "მაღალი და დიდებული ბუნების ქმნილება"},
-            {w: "ვაშლი", h: "ჯანსაღი, მრგვალი და გემრიელი ხილი"},
-            {w: "კომპიუტერი", h: "მოწყობილობა, რომლითაც ახლა მუშაობ"},
-            {w: "გამარჯვება", h: "მიზანი, რომლისკენაც მიდიხარ!"}
+        const gameData = [
+            { word: "თბილისი", hint: "საქართველოს დედაქალაქი" },
+            { word: "მზე", hint: "ის ანათებს და გვათბობს დღისით" },
+            { word: "ხაჭაპური", hint: "პოპულარული ქართული ყველიანი ცომეული" },
+            { word: "ზღვა", hint: "დიდი მარილიანი წყლის სივრცე" },
+            { word: "წიგნი", hint: "მასში უამრავი საინტერესო ამბავია დაწერილი" }
         ];
 
-        let currentIdx = 0;
+        let currentLevel = 0;
 
-        function updateUI() {
-            if (currentIdx < words.length) {
-                document.getElementById('hint').innerText = words[currentIdx].h;
-                document.getElementById('lvl').innerText = currentIdx + 1;
-                document.getElementById('pBar').style.width = ((currentIdx) / words.length * 100) + "%";
-                document.getElementById('ans').value = "";
+        function initGame() {
+            if (currentLevel < gameData.length) {
+                document.getElementById('hint-text').innerText = gameData[currentLevel].hint;
+                document.getElementById('level-num').innerText = currentLevel + 1;
+                document.getElementById('user-input').value = "";
             } else {
-                document.querySelector('.container').innerHTML = `
-                    <h1>გილოცავ! 🎉</h1>
-                    <p>შენ სიტყვების ლაბირინთი წარმატებით გაიარე!</p>
-                    <button class="btn-check" onclick="location.reload()">თავიდან დაწყება</button>
+                document.querySelector('.card').innerHTML = `
+                    <h1 style="color: #fdcb6e">გილოცავ! 🏆</h1>
+                    <p>შენ წარმატებით გაიარე ყველა დონე!</p>
+                    <button class="btn btn-check" onclick="location.reload()">თავიდან დაწყება 🔄</button>
                 `;
             }
         }
 
-        function check() {
-            let userAns = document.getElementById('ans').value.trim().toLowerCase();
-            let msg = document.getElementById('msg');
-            
-            if (userAns === words[currentIdx].w.toLowerCase()) {
-                currentIdx++;
-                msg.innerText = "სწორია! ✨";
-                msg.style.color = "#55efc4";
-                setTimeout(() => {
-                    msg.innerText = "";
-                    updateUI();
-                }, 1000);
+        function handleCheck() {
+            const input = document.getElementById('user-input').value.trim().toLowerCase();
+            const correctWord = gameData[currentLevel].word.toLowerCase();
+
+            if (input === correctWord) {
+                alert("სწორია! ✨ გადადიხარ შემდეგ დონეზე.");
+                currentLevel++;
+                initGame();
             } else {
-                msg.innerText = "სცადე კიდევ! ❌";
-                msg.style.color = "#ff7675";
+                alert("არასწორია ❌ სცადე კიდევ ერთხელ.");
             }
         }
 
-        function showReward() {
-            alert("რეკლამა ჩაიტვირთება AdMob-ის 'Ready' სტატუსის შემდეგ");
-            document.getElementById('ans').value = words[currentIdx].w;
+        function handleHint() {
+            alert("რეკლამა ჩაიტვირთება, როცა AdMob-ის სტატუსი გახდება 'Ready'");
+            // ავტომატურად ვავსებთ პასუხს მინიშნებისთვის
+            document.getElementById('user-input').value = gameData[currentLevel].word;
         }
 
-        updateUI();
+        // თამაშის დაწყება
+        window.onload = initGame;
     </script>
 </body>
 </html>
+
 
