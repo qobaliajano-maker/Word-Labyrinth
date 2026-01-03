@@ -3,75 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>სიტყვის ოსტატი</title>
+    <title>სიტყვის ოსტატი PRO</title>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-app-pub-1016750863743823" crossorigin="anonymous"></script>
     <style>
         :root { --p: #6c5ce7; --s: #00b894; }
-        body { font-family: sans-serif; background: #a29bfe; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        .game-area { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; }
-        .card { background: white; padding: 25px; border-radius: 25px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        h1 { color: var(--p); margin: 0; font-size: 24px; }
-        .stats { margin: 10px 0; font-weight: bold; color: #555; }
-        .hint { background: #f1f2f6; padding: 20px; border-radius: 15px; margin: 15px 0; min-height: 40px; border-left: 5px solid var(--p); font-size: 18px; }
-        input { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 12px; margin-bottom: 10px; font-size: 18px; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; background: var(--s); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 18px; }
-        #msg { margin-top: 10px; font-weight: bold; height: 20px; }
-        .ad-container { width: 100%; text-align: center; background: #eee; padding: 10px 0; }
+        body { font-family: sans-serif; background: #f0f2f5; margin: 0; display: flex; flex-direction: column; min-height: 100vh; align-items: center; }
+        .card { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-top: 50px; }
+        h1 { color: var(--p); }
+        .hint { background: #eef2f7; padding: 20px; border-radius: 10px; margin: 20px 0; font-size: 1.1em; border-left: 5px solid var(--p); }
+        input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1.1em; box-sizing: border-box; outline: none; }
+        .btns { display: grid; gap: 10px; margin-top: 10px; }
+        button { padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; }
+        .btn-check { background: var(--s); }
+        .btn-reward { background: var(--p); }
+        button:hover { opacity: 0.8; }
+        .ad-box { margin-top: auto; padding: 20px; background: #eee; width: 100%; text-align: center; }
     </style>
 </head>
 <body>
-
-    <div class="game-area">
-        <div class="card">
-            <h1>სიტყვის ოსტატი</h1>
-            <div class="stats">დონე: <span id="l">1</span> | ქულა: <span id="p">0</span></div>
-            <div class="hint" id="h">იტვირთება...</div>
-            <input type="text" id="i" placeholder="ჩაწერე პასუხი..." autocomplete="off">
-            <button onclick="check()">შემოწმება</button>
-            <div id="msg"></div>
+    <div class="card">
+        <h1>სიტყვის ოსტატი</h1>
+        <p>დონე: <span id="lvl">1</span> | ქულა: <span id="sc">0</span></p>
+        <div class="hint" id="hint">იტვირთება...</div>
+        <input type="text" id="ans" placeholder="ჩაწერე პასუხი..." autocomplete="off">
+        <div class="btns">
+            <button class="btn-check" onclick="check()">შემოწმება</button>
+            <button class="btn-reward" onclick="showReward()">🎁 პასუხის გაგება (ვიდეო)</button>
         </div>
+        <p id="msg" style="font-weight: bold; margin-top: 15px;"></p>
     </div>
 
-    <div class="ad-container">
-        <ins class="adsbygoogle"
-             style="display:inline-block;width:320px;height:50px"
-             data-ad-client="ca-app-pub-1016750863743823"
+    <div class="ad-box">
+        <ins class="adsbygoogle" style="display:inline-block;width:320px;height:50px" 
+             data-ad-client="ca-app-pub-1016750863743823" 
              data-ad-slot="3797162169"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
     <script>
-        const words = [
-            { w: "მზე", h: "ცაზე ანათებს და გვათბობს" },
-            { w: "ხაჭაპური", h: "პოპულარული ქართული ცომეული ყველით" },
-            { w: "თბილისი", h: "საქართველოს დედაქალაქი" },
-            { w: "კომპიუტერი", h: "მოწყობილობა, რომლითაც ამას კითხულობ" },
-            { w: "ვეფხისტყაოსანი", h: "რუსთაველის უკვდავი პოემა" }
+        const data = [
+            {w:"მზე", h:"დღისით ანათებს და გვათბობს"},
+            {w:"ხაჭაპური", h:"პოპულარული ქართული ყველიანი ცომეული"},
+            {w:"თბილისი", h:"საქართველოს დედაქალაქი"},
+            {w:"ზუგდიდი", h:"ქალაქი სამეგრელოში, სადაც შენ ხარ"},
+            {w:"ლომი", h:"ცხოველთა მეფე"},
+            {w:"წყალი", h:"უფერო სითხე, რომელსაც ვსვამთ"},
+            {w:"ვაშლი", h:"მრგვალი ხილი, წითელი ან მწვანე"},
+            {w:"სკოლა", h:"შენობა, სადაც ბავშვები სწავლობენ"},
+            {w:"პური", h:"ფქვილისგან გამომცხვარი ძირითადი საკვები"},
+            {w:"მთა", h:"დედამიწის ზედაპირის ძალიან მაღალი ადგილი"},
+            {w:"წიგნი", h:"ფურცლების ნაკრები, რომელსაც ვკითხულობთ"},
+            {w:"მანქანა", h:"ტრანსპორტი ოთხი ბორბლით"},
+            {w:"მდინარე", h:"წყლის ბუნებრივი ნაკადი, რომელიც მიედინება"},
+            {w:"წვიმა", h:"ციდან წამოსული წყლის წვეთები"},
+            {w:"კატა", h:"შინაური ცხოველი, რომელიც ამბობს მიაუ"},
+            {w:"ძაღლი", h:"ადამიანის ყველაზე ერთგული მეგობარი"},
+            {w:"თევზი", h:"წყლის ბინადარი, რომელიც ფარფლებით დაცურავს"},
+            {w:"ჩაი", h:"ცხელი სასმელი, რომელსაც ხშირად ლიმონით ვსვამთ"},
+            {w:"ყვავილი", h:"მცენარის ლამაზი და სურნელოვანი ნაწილი"},
+            {w:"თოვლი", h:"ზამთარში ციდან წამოსული თეთრი ფიფქები"}
         ];
-        let cur = 0, pts = 0;
-        function update() {
-            if(cur < words.length) {
-                document.getElementById('h').innerText = words[cur].h;
-                document.getElementById('l').innerText = cur + 1;
-                document.getElementById('i').value = "";
+
+        let idx = 0, pts = 0;
+        function show() {
+            if(idx < data.length) {
+                document.getElementById('hint').innerText = "მინიშნება: " + data[idx].h;
+                document.getElementById('lvl').innerText = idx + 1;
+                document.getElementById('ans').value = "";
                 document.getElementById('msg').innerText = "";
             } else {
-                document.querySelector('.card').innerHTML = "<h2>ყოჩაღ! 🎉</h2><p>შენ ყველა სიტყვა გამოიცანი!</p><button onclick='location.reload()'>თავიდან</button>";
+                document.querySelector('.card').innerHTML = "<h2>მოიგე! 🎉</h2><p>შენ ყველა სიტყვა გამოიცანი.</p><button class='btn-check' onclick='location.reload()'>თავიდან დაწყება</button>";
             }
         }
+
         function check() {
-            let val = document.getElementById('i').value.trim().toLowerCase();
-            if(val === words[cur].w.toLowerCase()) {
-                pts += 10; document.getElementById('p').innerText = pts;
-                document.getElementById('msg').innerText = "სწორია! 🎉";
+            let val = document.getElementById('ans').value.trim().toLowerCase();
+            if(val == data[idx].w.toLowerCase()) {
+                idx++; pts+=10; document.getElementById('sc').innerText = pts;
                 document.getElementById('msg').style.color = "green";
-                cur++; setTimeout(update, 1000);
+                document.getElementById('msg').innerText = "სწორია! ✨";
+                setTimeout(show, 800);
             } else {
-                document.getElementById('msg').innerText = "სცადე კიდევ! ❌";
                 document.getElementById('msg').style.color = "red";
+                document.getElementById('msg').innerText = "არასწორია ❌ სცადე კიდევ!";
             }
         }
-        update();
+
+        // Rewarded რეკლამის ფუნქცია (Reward_Hint ID: ca-app-pub-1016750863743823/1419584294)
+        function showReward() {
+            alert("რეკლამა იტვირთება... (როცა Google დაამტკიცებს საიტს, აქ ვიდეო ჩაირთვება)");
+            // ავტომატურად ვწერთ პასუხს რეკლამის ყურების სანაცვლოდ
+            document.getElementById('ans').value = data[idx].w;
+            check();
+        }
+        show();
     </script>
 </body>
 </html>
